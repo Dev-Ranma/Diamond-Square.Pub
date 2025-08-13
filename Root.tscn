@@ -1,0 +1,120 @@
+[gd_scene load_steps=7 format=3 uid="uid://ohlp7gr74wvg"]
+
+[ext_resource type="Script" uid="uid://cgj4ou7d7yy7" path="res://node_2d.gd" id="1_gxo8o"]
+[ext_resource type="PackedScene" uid="uid://bhqmb13vlqegd" path="res://Test Buddy.tscn" id="2_24d08"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cwqeq"]
+bg_color = Color(0.219608, 0.309804, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_170dk"]
+bg_color = Color(0.441702, 0.674764, 0.317666, 1)
+
+[sub_resource type="Theme" id="Theme_24d08"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_24d08"]
+bg_color = Color(0, 0.458824, 0.686275, 1)
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource("1_gxo8o")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(-17, -15)
+anchor_mode = 0
+
+[node name="ColorRect" type="ColorRect" parent="."]
+z_index = -1
+offset_left = -16.0
+offset_top = -16.0
+offset_right = 51.0
+offset_bottom = 52.0
+scale = Vector2(29.04, 16.28)
+color = Color(0.784314, 0.784314, 0.784314, 1)
+
+[node name="Sprite2D" parent="." instance=ExtResource("2_24d08")]
+position = Vector2(1820, 987)
+scale = Vector2(0.953125, 0.933594)
+
+[node name="ItemList" type="ItemList" parent="."]
+offset_left = 1188.0
+offset_top = 163.0
+offset_right = 1664.0
+offset_bottom = 757.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/line_separation = 30
+theme_override_font_sizes/font_size = 30
+theme_override_styles/panel = SubResource("StyleBoxFlat_cwqeq")
+auto_width = true
+auto_height = true
+item_count = 2
+item_0/text = "Grid Size:"
+item_0/selectable = false
+item_1/text = "Lines:"
+item_1/selectable = false
+
+[node name="displayLinesCheck" type="CheckBox" parent="ItemList"]
+layout_mode = 0
+offset_left = 96.0
+offset_top = 50.0
+offset_right = 120.0
+offset_bottom = 74.0
+scale = Vector2(1.68, 1.64)
+
+[node name="NumSelect" type="MenuButton" parent="ItemList"]
+layout_mode = 0
+offset_left = 125.0
+offset_top = -11.0
+offset_right = 222.0
+offset_bottom = 59.0
+theme_override_font_sizes/font_size = 25
+theme_override_styles/normal = SubResource("StyleBoxFlat_170dk")
+text = "num"
+item_count = 8
+popup/item_0/text = "3"
+popup/item_0/id = 0
+popup/item_1/text = "5"
+popup/item_1/id = 1
+popup/item_2/text = "9"
+popup/item_2/id = 2
+popup/item_3/text = "17"
+popup/item_3/id = 3
+popup/item_4/text = "33"
+popup/item_4/id = 4
+popup/item_5/text = "65"
+popup/item_5/id = 5
+popup/item_6/text = "129"
+popup/item_6/id = 6
+popup/item_7/text = "257"
+popup/item_7/id = 7
+
+[node name="FPSLabel" type="Label" parent="."]
+offset_left = 1841.0
+offset_top = 5.0
+offset_right = 1905.0
+offset_bottom = 67.0
+theme = SubResource("Theme_24d08")
+theme_override_font_sizes/font_size = 36
+text = "fps"
+
+[node name="Panel" type="Panel" parent="FPSLabel"]
+z_index = -1
+layout_mode = 0
+offset_left = -7.0
+offset_right = 58.0
+offset_bottom = 58.0
+
+[node name="Generate Button" type="Button" parent="."]
+offset_left = 1204.0
+offset_top = 781.0
+offset_right = 1612.0
+offset_bottom = 866.0
+theme_override_font_sizes/font_size = 55
+theme_override_styles/normal = SubResource("StyleBoxFlat_24d08")
+text = "Start"
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.05
+
+[connection signal="toggled" from="ItemList/displayLinesCheck" to="." method="_on_display_lines_check_toggled"]
+[connection signal="pressed" from="ItemList/NumSelect" to="." method="_on_num_select_pressed"]
+[connection signal="pressed" from="Generate Button" to="." method="_on_generate_button_pressed"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
