@@ -8,10 +8,12 @@ var cellNum : int = 3 #200 is hard limit for number of grid lines
 var cellMax : int = cellNum * cellNum
 var areLinesActive : bool = false
 @onready var numSelect = $ItemList/NumSelect
-var colorArray : Array[Color] = [Color.DARK_BLUE, Color.ROYAL_BLUE, Color.DEEP_SKY_BLUE, Color.PAPAYA_WHIP, Color.SEA_GREEN, Color.FOREST_GREEN, Color.DARK_GREEN, Color.GOLDENROD, Color.BROWN, Color.WEB_MAROON]
+var colorArray : Array[Color] = [Color.DARK_BLUE, Color.DARK_BLUE, Color.DODGER_BLUE, Color.DODGER_BLUE, Color.SKY_BLUE, Color(1 * .9, .7843137255, .2784313725 * .90), Color(.6039215686 * .75, .8901960784 * .75, .1843137255 * .75), Color(.6039215686 * .75, .8901960784 * .75, .1843137255 * .75),Color.FOREST_GREEN, Color.FOREST_GREEN, Color.DARK_GREEN, Color.CHOCOLATE, Color.SADDLE_BROWN]
+var colorTotal : int = colorArray.size() - 1
+var variaArray : Array = [1]
 #@onready var clock = $Timer
 #var holdUp : bool = false
-
+#  Color.BLACK
 
 func _ready() -> void:
 	numSelect.text = str(cellNum)
@@ -105,13 +107,11 @@ func diamond_square():
 	
 	for each in cornerArray:
 		cellGridIndex[each][2] = 1
-		cellGridIndex[each][3] = int(randi_range(0, 9))
+		cellGridIndex[each][3] = int(randi_range(0, colorTotal))
 		cornerColor += cellGridIndex[each][3]
 	#variation = varianceRate / varianceDivisible
 	
 	while areWeGoodToGo == false:
-		iteration += 1
-		
 		for point in validCorner:
 			n3 = point
 			cornerArray.clear()
@@ -125,7 +125,7 @@ func diamond_square():
 			for each in cornerArray:
 				if cellGridIndex[each][2] != 1:
 						cellGridIndex[each][2] = 1
-						cellGridIndex[each][3] = randi_range(0, 9) 
+						cellGridIndex[each][3] = randi_range(0, colorTotal) 
 				cornerIndexArray.push_back(each)
 			diamondCenter = ((cornerIndexArray[0] + cornerIndexArray[1] + cornerIndexArray[2] + cornerIndexArray[3]) / 4)
 			pointInbetweenX = (cornerIndexArray[0] + cornerIndexArray[1]) / 2
@@ -139,33 +139,29 @@ func diamond_square():
 			for each in diamondSquareArray:
 				if cellGridIndex[each][2] != 1:
 					cellGridIndex[each][2] = 1
-					n4 = randomArray.pick_random()
+					n4 = randi_range(-(variaArray[iteration]), variaArray[iteration]) 
+					#n4 = randomArray.pick_random()
 					match each:
 						AA:
-							cellGridIndex[each][3] = clamp((((cellGridIndex[w][3]) + (cellGridIndex[x][3]) + (cellGridIndex[y][3]) + (cellGridIndex[z][3])) / 4) + n4, 0, 9)
+							cellGridIndex[each][3] = clamp((((cellGridIndex[w][3]) + (cellGridIndex[x][3]) + (cellGridIndex[y][3]) + (cellGridIndex[z][3])) / 4) + n4, 0, colorTotal)
 						A:
-							cellGridIndex[each][3] = clamp(((cellGridIndex[w][3] + cellGridIndex[x][3]) / 2) + n4, 0, 9)
+							cellGridIndex[each][3] = clamp(((cellGridIndex[w][3] + cellGridIndex[x][3]) / 2) + n4, 0, colorTotal)
 						B:
-							cellGridIndex[each][3] = clamp(((cellGridIndex[y][3] + cellGridIndex[z][3]) / 2) + n4, 0, 9)
+							cellGridIndex[each][3] = clamp(((cellGridIndex[y][3] + cellGridIndex[z][3]) / 2) + n4, 0, colorTotal)
 						C:
-							cellGridIndex[each][3] = clamp(((cellGridIndex[w][3] + cellGridIndex[y][3]) / 2) + n4, 0, 9)
+							cellGridIndex[each][3] = clamp(((cellGridIndex[w][3] + cellGridIndex[y][3]) / 2) + n4, 0, colorTotal)
 						D:
-							cellGridIndex[each][3] = clamp(((cellGridIndex[x][3] + cellGridIndex[z][3]) / 2) + n4, 0, 9)
+							cellGridIndex[each][3] = clamp(((cellGridIndex[x][3] + cellGridIndex[z][3]) / 2) + n4, 0, colorTotal)
 			tempArray.push_back(diamondCenter)
 			tempArray.push_back((pointInbetweenX))
 			tempArray.push_back((pointInbetweenY))
+		iteration += 1
 		for cell in cellMax:
 			if cellGridIndex[cell][2] == 1:
 				n2 += 1
 		if n2 == cellMax:
 			areWeGoodToGo = true
 			print(n4)
-			#print(AA, A, B, C, D)
-			#print(diamondSquareArray)
-			#print(cellGridIndex)
-			#print(cornerArray)
-			#print(cornerIndexArray)
-			#print(diamondSquareArray)
 		else:
 			areWeGoodToGo = false
 			n2 = 0
@@ -199,19 +195,27 @@ func _on_num_select_pressed(id) -> void:
 	match(id):
 		0:
 			cellNum = 3
+			variaArray = [1]
 		1:
 			cellNum = 5
+			variaArray = [2, 1]
 		2:
 			cellNum = 9
+			variaArray = [2, 1, 1]
 		3:
 			cellNum = 17
+			variaArray = [2, 2, 1, 1]
 		4:
 			cellNum = 33
+			variaArray = [3, 2, 1, 1, 1]
 		5:
 			cellNum = 65
+			variaArray = [3, 2, 1, 1, 1, 1]
 		6:
 			cellNum =  129
+			variaArray = [3, 2, 1, 1, 1, 1, 1]
 		7:
 			cellNum = 257
+			variaArray = [3, 2, 2, 1, 1, 1, 1, 1]
 	cellMax = cellNum * cellNum
 	numSelect.text = str(cellNum)
